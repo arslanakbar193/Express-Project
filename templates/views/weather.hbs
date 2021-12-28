@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {{>header}}
+    </head>
+    <body>
+        {{>navbar}}
+        <!-- <Main Header> -->
+
+        <div class="container-fluid main_header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 col-12 mx-auto">
+                        <div class="row">
+                            <div class="col-md-12 col-12">
+                                <div class="col-md-6 mx-auto">
+                                    <div class="main-content">
+                                        <form>
+                                            <div class="input-group">
+                                                <input type="text" id="cityname" class="form-control" placeholder="Search...">
+                                                <div class="input-group-append">
+                                                <input type="submit" value="submit" id="submitBtn" />
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mx-auto">
+                                    <div class="main-content-sub">
+                                        <form>
+                                            <div class="weather-info">
+                                                <div class="dayanddate">
+                                                    <p id="day">Tuesday</p>
+                                                    <p id="date">12/27/2021</p>
+                                                </div>
+                                                <div class="main-layer">
+                                                    <p id="city-name">Get Ouput Here</p>
+                                                    <div class="citycountry">
+                                                        <p id="city">Bahawalpur</p>
+                                                        <p id="country">Country</p>
+                                                    </div>
+                                                    <p>
+                                                        <span id="temp">0</span><sup>o</sup>C 
+                                                        <span id="temp2">Country</span> 
+                                                        <span id="mood"><i class="fa fa-cloud"></i></i></span>
+                                                    </p>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{>footer}}
+        <script>
+const inputname =  document.getElementById("cityname");          
+const submitbtn = document.getElementById("submitBtn");
+const cn = document.getElementById("city-name");
+const tempStatus = document.getElementById("temp");
+const tempStatus2 = document.getElementById("temp2");
+const country = document.getElementById("country");
+const city = document.getElementById("city");
+const mood = document.getElementById("mood");
+
+const getInfo = async (e) => {
+    e.preventDefault();
+    alert("yes");
+    let inputval = inputname.value;
+    if(inputval === ""){
+        cn.innerText = `Please Fill the data`;
+    }else{
+        try{
+            let url = `https://api.openweathermap.org/data/2.5/weather?q=${inputval}&units=metric&appid=cf1712ef571582de83b74e62256d47d8`;
+            const response = await fetch(url);
+            const data = await response.json();
+            const arrData = [data];
+            if(arrData){
+            console.log(arrData);
+            const cus = parseInt(arrData[0].main.temp);
+            tempStatus.innerText=cus;
+            const cus2 = arrData[0].weather[0].main;
+            if(cus2 == "Clear"){
+                mood.innerHTML = "<i class='fas fa-sun'>";
+            }else if(cus2 == "Clouds"){
+                mood.innerHTML= "<i class='fa fa-cloud'></i>";
+            }else if(cus2 == "Smoke"){
+                mood.innerHTML="<i class='fal fa-smog'></i>";
+            }else{
+                 mood.innerHTML= "<i class='fa fa-cloud'></i>";
+            }
+            tempStatus2.innerText=
+            country.innerText=arrData[0].sys.country;
+            city.innerText=arrData[0].name;
+        }
+        }
+        catch(err){
+            cn.innerText = `Please enter the city name properly`;
+        }
+        
+    }
+}
+submitbtn.addEventListener('click' , getInfo);
+        </script>
+    </body>
+</html>
